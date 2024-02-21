@@ -1,11 +1,17 @@
+import 'package:api_riverpoad/config/routes/routes.dart';
+import 'package:api_riverpoad/data/models/tasks_model.dart';
 import 'package:api_riverpoad/utils/extensions.dart';
-import 'package:api_riverpoad/widgets/common_container.dart';
+import 'package:api_riverpoad/utils/task_categories.dart';
 import 'package:api_riverpoad/widgets/display_list_of_task.dart';
 import 'package:api_riverpoad/widgets/display_whtie_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
+  //add this line for route when you used builder in routes//
+  static HomeScreen builder(BuildContext context, GoRouterState state) =>
+      HomeScreen(); //here end the line/*/
   const HomeScreen({super.key});
 
   @override
@@ -59,7 +65,36 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       DisplayListOfTask(
                         isCompletedTasks: true,
-                        tasks: [],
+                        tasks: [
+                          Task(
+                              title: 'title',
+                              note: 'note',
+                              time: '10:12',
+                              date: 'Aug 07',
+                              isCompleted: true,
+                              category: TaskCategory.education),
+                          Task(
+                              title: 'Others',
+                              note: 'note',
+                              time: '11:35',
+                              date: 'Aug 07',
+                              isCompleted: false,
+                              category: TaskCategory.others),
+                          Task(
+                              title: 'Social',
+                              note: 'note',
+                              time: '1:12',
+                              date: 'Aug 07',
+                              isCompleted: true,
+                              category: TaskCategory.social),
+                          Task(
+                              title: 'Health',
+                              note: '',
+                              time: '10:12',
+                              date: 'Aug 07',
+                              isCompleted: false,
+                              category: TaskCategory.health),
+                        ],
                       ),
                       Gap(20),
                       Text(
@@ -73,7 +108,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       Gap(20),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => context.push(RoutesLocation.creatTask),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: DisplayWhiteText(text: "Add new task"),

@@ -1,7 +1,11 @@
 import 'package:api_riverpoad/data/models/tasks_model.dart';
 import 'package:api_riverpoad/utils/extensions.dart';
+import 'package:api_riverpoad/utils/task_categories.dart';
 import 'package:api_riverpoad/widgets/common_container.dart';
+import 'package:api_riverpoad/widgets/task_details.dart';
+import 'package:api_riverpoad/widgets/task_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class DisplayListOfTask extends StatelessWidget {
   const DisplayListOfTask(
@@ -27,13 +31,39 @@ class DisplayListOfTask extends StatelessWidget {
                 style: context.textTheme.headlineSmall,
               ),
             )
-          : ListView.builder(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              itemCount: tasks.length,
-              itemBuilder: (context, index) {
-                return Text("Home");
-              }),
+          : SingleChildScrollView(
+              child: SizedBox(
+                height: devicesize.height * 0.25,
+                child: ListView.separated(
+                  itemCount: tasks.length,
+                  itemBuilder: (BuildContext, index) {
+                    final task = tasks[index];
+                    return InkWell(
+                      onLongPress: () {
+                        //todo- delete task//
+                      },
+
+                      ///toodo-show detials/
+                      onTap: () async {
+                        await showModalBottomSheet(
+                            context: context,
+                            builder: (ctx) {
+                              return TaskDetials(task: task);
+                            });
+                      },
+                      child: TaskTile(
+                        task: task,
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider(
+                      thickness: 1.5,
+                    );
+                  },
+                ),
+              ),
+            ),
     );
   }
 }
