@@ -1,20 +1,25 @@
-import 'package:api_riverpoad/config/routes/routes.dart';
-import 'package:api_riverpoad/screens/create_task_screen.dart';
-import 'package:api_riverpoad/screens/home_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:api_riverpoad/screens/onboard/main_onboard.dart';
 import 'package:go_router/go_router.dart';
 
-final navigationKey = GlobalKey<NavigatorState>();
+import '../../screens/create_task_screen.dart';
+import '../../screens/home_screen.dart';
+import 'routes_location.dart';
+import 'routes_provider.dart';
 
 final appRoutes = [
   GoRoute(
-    path: RoutesLocation.home,
+    path: RouteLocation.onboard,
+    parentNavigatorKey: navigationKey,
+    builder: OnboardPage.builder,
+  ),
+  GoRoute(
+    path: RouteLocation.home,
     parentNavigatorKey: navigationKey,
     builder: HomeScreen.builder,
   ),
   GoRoute(
-    path: RoutesLocation.creatTask,
+    path: RouteLocation.createTask,
     parentNavigatorKey: navigationKey,
-    builder: CreatTaskScreen.builder,
-  )
+    builder: CreateTaskScreen.builder,
+  ),
 ];

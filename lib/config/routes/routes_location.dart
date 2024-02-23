@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show immutable;
 
 @immutable
-class RoutesLocation {
-  RoutesLocation._();
-
+class RouteLocation {
+  const RouteLocation._();
+  static String get onboard => '/onboard';
   static String get home => '/home';
-  static String get creatTask => '/creatTask';
+  static String get createTask => '/createTask';
 }

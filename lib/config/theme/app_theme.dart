@@ -4,10 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 @immutable
 class AppTheme {
-  //private constructor//
-  AppTheme._();
+  const AppTheme._();
 
-  ///theme coding for light view//
   static final light = FlexThemeData.light(
     scheme: FlexScheme.barossa,
     surfaceMode: FlexSurfaceMode.highScaffoldLowSurfacesVariantDialog,

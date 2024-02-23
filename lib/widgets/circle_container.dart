@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 
-import '../data/models/tasks_model.dart';
-
 class CircleContainer extends StatelessWidget {
-  const CircleContainer(
-      {super.key, required this.color, this.task, this.child});
-  final Color color;
-  final Task? task;
+  const CircleContainer({
+    super.key,
+    this.child,
+    required this.color,
+    this.borderWidth,
+    this.borderColor,
+  });
   final Widget? child;
+  final Color color;
+  final double? borderWidth;
+  final Color? borderColor;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.zero,
-      child: Container(
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color,
-            border: Border.all(
-              width: 2,
-              color: color,
-            )),
-        child: Center(child: child),
+    return Container(
+      padding: const EdgeInsets.all(9),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+        border: Border.all(
+          width: borderWidth ?? 2,
+          color: color,
+        ),
+      ),
+      child: Center(
+        child: child,
       ),
     );
   }

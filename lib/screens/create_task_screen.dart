@@ -1,54 +1,121 @@
-import 'package:api_riverpoad/widgets/common_textfield.dart';
-import 'package:api_riverpoad/widgets/display_whtie_text.dart';
-import 'package:api_riverpoad/widgets/select_category.dart';
-import 'package:api_riverpoad/widgets/selected_date_time.dart';
+import 'package:api_riverpoad/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
-class CreatTaskScreen extends StatelessWidget {
-  static CreatTaskScreen builder(BuildContext context, GoRouterState state) =>
-      CreatTaskScreen();
-  const CreatTaskScreen({super.key});
+import '../config/routes/routes_location.dart';
+import '../data/models/task.dart';
+
+import '../providers/category_provider.dart';
+import '../providers/date_provider.dart';
+import '../providers/task/tasks_provider.dart';
+import '../providers/time_provider.dart';
+import '../widgets/categories_Selection.dart';
+import '../widgets/common_text_field.dart';
+import '../widgets/display_white_text.dart';
+import '../widgets/select_date_time.dart';
+
+class CreateTaskScreen extends ConsumerStatefulWidget {
+  static CreateTaskScreen builder(
+    BuildContext context,
+    GoRouterState state,
+  ) =>
+      const CreateTaskScreen();
+  const CreateTaskScreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CreateTaskScreenState();
+}
+
+class _CreateTaskScreenState extends ConsumerState<CreateTaskScreen> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: DisplayWhiteText(
-          text: "Add New Text",
+        backgroundColor: colors.primary,
+        title: const DisplayWhiteText(
+          text: 'Add New Task',
         ),
       ),
-      body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CommonTextField(
-              title: "Task Title",
-              hintText: "Task title",
-            ),
-            Gap(15),
-            SelectCategory(),
-            Gap(15),
-            SelectedDateTime(),
-            Gap(15),
-            CommonTextField(
-              title: "Note",
-              hintText: "Task Note",
-              maxlines: 5,
-            ),
-            Gap(80),
-            ElevatedButton(
-                onPressed: () {},
-                child: DisplayWhiteText(
-                  text: "Save",
-                ))
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              CommonTextField(
+                hintText: 'Task Title',
+                title: 'Task Title',
+                controller: _titleController,
+              ),
+              const Gap(30),
+              const CategoriesSelection(),
+              const Gap(30),
+              const SelectDateTime(),
+              const Gap(30),
+              CommonTextField(
+                hintText: 'Notes',
+                title: 'Notes',
+                maxLines: 6,
+                controller: _noteController,
+              ),
+              const Gap(30),
+              ElevatedButton(
+                onPressed: _createTask,
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: DisplayWhiteText(
+                    text: 'Save',
+                  ),
+                ),
+              ),
+              const Gap(30),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _createTask() async {
+    final title = _titleController.text.trim();
+    final note = _noteController.text.trim();
+    final time = ref.watch(timeProvider);
+    final date = ref.watch(dateProvider);
+    final category = ref.watch(categoryProvider);
+    if (title.isNotEmpty) {
+      final task = Task(
+        title: title,
+        category: category,
+        time: Helpers.timeToString(time),
+        date: DateFormat.yMMMd().format(date),
+        note: note,
+        isCompleted: false,
+      );
+
+      await ref.read(tasksProvider.notifier).createTask(task).then((value) {
+        AppAlerts.displaySnackbar(context, 'Task create successfully');
+        context.go(RouteLocation.home);
+      });
+    } else {
+      AppAlerts.displaySnackbar(context, 'Title cannot be empty');
+    }
   }
 }
